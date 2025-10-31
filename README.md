@@ -2,7 +2,7 @@
 
 This document details the code smells identified in `src/main.ts` and the refactoring patterns applied to improve its quality.
 
-## 🔬 Code Smells
+## Code Smells
 
 - **Unclear Variable Names:** Many variables had short, bad names that did not clearly communicate their purpose, making the code difficult to read.
 
@@ -16,7 +16,7 @@ This document details the code smells identified in `src/main.ts` and the refact
 
 ---
 
-## 🛠️ Refactoring Patterns Applied
+## Refactoring Patterns Applied
 
 - **Rename Variable:** All cryptic variables were renamed to be clear and self-documenting (e.g., `c` → `count`, `bI` → `incrementButton`).
   - **Improvement:** This makes the code's intent immediately understandable without needing comments.
