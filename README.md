@@ -1,40 +1,34 @@
-# Section 5 – Refactoring Code Smells in Practice
+# Refactoring Analysis
 
-This activity is designed to help you practice identifying code smells and applying refactoring patterns to a real codebase in CMPM 121, Game Development Patterns.
+This document details the code smells identified in `src/main.ts` and the refactoring patterns applied to improve its quality.
 
-## Assignment Instructions
+## 🔬 Code Smells
 
-For this assignment, your task is to **analyze and improve the code in `src/main.ts`**:
+- **Unclear Variable Names:** Many variables had short, bad names that did not clearly communicate their purpose, making the code difficult to read.
 
-1. **Identify code smells**: Review the code and look for patterns that may cause maintenance issues, reduce readability, or introduce potential bugs.
-2. **Refactor**: Apply **refactoring patterns** as described in Fowler’s _Refactoring_ book to improve the code.
-3. **Document your work**: Once you have completed your refactoring:
-   - Rewrite this README.md
-   - List the **code smells** you identified
-   - Describe the **refactoring patterns** you applied and how they improved the code
+- **Duplicated Code:** The logic for updating the UI (setting the counter's text, updating the document title, and changing the background color) was copied and pasted inside all three event listeners, violating the DRY principle.
 
-## Getting Started
+- **Magic Strings and Numbers:** Raw string values for element IDs and CSS colors were used directly in the code, making them hard to maintain and prone to typos.
 
-With Codespaces (or another environment supporting devcontainers):
+- **Long Method:** The `setup()` function violated the Single Responsibility Principle by doing too much: creating the DOM, querying for elements, and attaching all event listeners.
 
-1. Run `deno task dev` to start the development server
+- **Global Variable State:** The application's core state was a mutable global variable, which is poor practice and can lead to unpredictable behavior as an application grows.
 
-Without Codespaces (local VS Code):
+---
 
-1. Install the [Deno](https://docs.deno.com/runtime/getting_started/installation/) runtime.
-2. Install the Deno VS Code extension (must be done only after installing Deno runtime).
-3. Run `./setup-hooks.sh` to enable pre-commit quality checks
-4. Run `deno task dev` to start the development server
+## 🛠️ Refactoring Patterns Applied
 
-The setup script configures Git hooks to automatically run formatting, linting, and type checking before commits.
+- **Rename Variable:** All cryptic variables were renamed to be clear and self-documenting (e.g., `c` → `count`, `bI` → `incrementButton`).
+  - **Improvement:** This makes the code's intent immediately understandable without needing comments.
 
-## Deployment
+- **Replace Magic Literal with Symbolic Constant (Extract Constant):** All magic strings and numbers were extracted into a single, centralized `CONFIG` object.
+  - **Improvement:** Centralizes configuration, prevents bugs from typos, and makes it easy to update values in one place.
 
-This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
+- **Extract Method:** This pattern was applied in several ways:
+  1. The **duplicated UI update logic** was extracted into a single `updateUI()` function.
+  2. The logic inside each anonymous event listener was extracted into named handlers (e.g., `handleIncrement`).
+  3. The **Long Method** `setup()` was decomposed into smaller, focused functions (`createDOM()` and `registerEventListeners()`).
+  - **Improvement:** The code is now DRY, more readable, and easier to maintain. Each function has a clear, single responsibility.
 
-### Setup GitHub Pages Deployment
-
-1. Go to your repository's Settings → Pages
-2. Under "Source", select "GitHub Actions"
-3. The workflow will automatically deploy on pushes to the `main` branch
-4. Your site will be published at `https://<your-github-username>.github.io/<repository-name>/`
+- **Inline Method:** The redundant `start()` function, which only called `setup()`, was removed, and `setup()` was called directly.
+  - **Improvement:** This removed an unnecessary layer of indirection, simplifying the code's execution flow.
